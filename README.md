@@ -158,7 +158,7 @@ scikit-learn
 **Vipin Kumar**
 
 * Email: [vipinmeomon@gmail.com](mailto:vipinmemon8123@gmail.com)
-* GitHub: [https://github.com/vipinmememon](https://github.com/vipinmememon)
+* GitHub: [https://github.com/vipinmememon](https://github.com/csevipinmenon)
 
 ---
 
