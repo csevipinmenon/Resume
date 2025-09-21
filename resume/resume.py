@@ -492,7 +492,7 @@ def main():
 
     tab = st.sidebar.radio("Select Mode", ["User", "Admin"])
     
-    if tab==" Admin":
+    if tab=="Admin":
         st.header("🔹 Admin Panel")
         
         # Add Job Section
@@ -700,7 +700,7 @@ def main():
             else:
                 st.info(" No applications received for this job yet.")
     
-    elif tab==" User":
+    elif tab=="User":
         st.header("🔹 User Panel - Apply for Jobs")
         
         jobs = db.get_all_jobs()
