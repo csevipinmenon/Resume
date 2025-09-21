@@ -135,6 +135,9 @@ pip install -r requirements.txt
 ```bash
 streamlit run app.py
 ```
+```bash
+streamlit run resume.py --server.fileWatcherType=none
+```
 
 ---
 
