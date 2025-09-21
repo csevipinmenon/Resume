@@ -153,12 +153,13 @@ scikit-learn
 ##  Author
 
 ##Team - ZeroBug
+
 **Saurabh Paswan**
 **Priyaranjan**
 **Vipin Kumar**
 
-* Email: [vipinmeomon@gmail.com](mailto:vipinmemon8123@gmail.com)
-* GitHub: [https://github.com/vipinmememon](https://github.com/csevipinmenon)
+* Email: [vipinmemon@gmail.com](mailto:vipinmemon8123@gmail.com)
+* GitHub: [https://github.com/csevipinmenon](https://github.com/csevipinmenon)
 
 ---
 
