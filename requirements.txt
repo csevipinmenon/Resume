@@ -18,3 +18,4 @@ fuzzywuzzy
 pdfplumber
 docx2txt
 scikit-learn
+torch
