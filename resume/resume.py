@@ -466,37 +466,37 @@ class ResumeEvaluator:
 # ------------------- STREAMLIT APP -------------------
 def main():
     st.set_page_config("Automated Resume Evaluation", layout="wide")
-    st.title("🎯 Automated Resume Relevance Check System")
+    st.title("Automated Resume Relevance Check System")
     
     # Show system status
     with st.sidebar:
-        st.markdown("### 🔧 System Status")
+        st.markdown("###  System Status")
         if SENTENCE_TRANSFORMERS_AVAILABLE:
-            st.success("✅ AI-powered semantic analysis")
+            st.success(" AI-powered semantic analysis")
         else:
-            st.warning("⚠️ Using keyword-based analysis")
+            st.warning(" Using keyword-based analysis")
         
         if DOC_LIBS_AVAILABLE:
-            st.success("✅ PDF/DOCX parsing enabled")
+            st.success(" PDF/DOCX parsing enabled")
         else:
-            st.error("❌ Document parsing limited")
+            st.error(" Document parsing limited")
     
     try:
         db = DatabaseManager()
         parser = DocumentParser()
         evaluator = ResumeEvaluator()
     except Exception as e:
-        st.error(f"❌ System initialization failed: {e}")
+        st.error(f" System initialization failed: {e}")
         st.info("Please refresh the page or contact support if the issue persists.")
         return
 
-    tab = st.sidebar.radio("Select Mode", ["👤 User", "👑 Admin"])
+    tab = st.sidebar.radio("Select Mode", ["User", "Admin"])
     
-    if tab=="👑 Admin":
+    if tab==" Admin":
         st.header("🔹 Admin Panel")
         
         # Add Job Section
-        with st.expander("➕ Add New Job Description", expanded=False):
+        with st.expander("Add New Job Description", expanded=False):
             with st.form("job_form"):
                 col1, col2 = st.columns(2)
                 with col1:
@@ -513,7 +513,7 @@ def main():
                 education = st.text_input("Required Education (comma-separated)", 
                                         placeholder="e.g., Bachelor, Master")
                 
-                submitted = st.form_submit_button("💾 Save Job", type="primary")
+                submitted = st.form_submit_button("Save Job", type="primary")
                 
                 if submitted:
                     if title and company and desc and must_skills:
@@ -528,19 +528,19 @@ def main():
                             created_at=datetime.now()
                         )
                         db.save_job(job)
-                        st.success(f"✅ Job '{title}' at '{company}' saved successfully!")
+                        st.success(f"Job '{title}' at '{company}' saved successfully!")
                         st.experimental_rerun()
                     else:
-                        st.error("❌ Please fill in all required fields (marked with *)")
+                        st.error("Please fill in all required fields (marked with *)")
 
         st.markdown("---")
         
         # Job Selection and Evaluation Display
-        st.subheader("📊 View Job Applications & Evaluations")
+        st.subheader("View Job Applications & Evaluations")
         
         jobs = db.get_all_jobs()
         if not jobs:
-            st.info("📝 No jobs available. Please add a job first.")
+            st.info("No jobs available. Please add a job first.")
             return
         
         # Create job options with application count
@@ -553,13 +553,13 @@ def main():
             job_options.append(option_text)
             job_map[option_text] = job
         
-        selected_job_option = st.selectbox("🎯 Select Job to View Applications:", job_options)
+        selected_job_option = st.selectbox("Select Job to View Applications:", job_options)
         
         if selected_job_option != "-- Select a Job --":
             selected_job = job_map[selected_job_option]
             
             # Display job details
-            with st.expander(f"📋 Job Details: {selected_job.title}", expanded=True):
+            with st.expander(f"Job Details: {selected_job.title}", expanded=True):
                 col1, col2 = st.columns(2)
                 with col1:
                     st.write(f"**Company:** {selected_job.company}")
@@ -575,7 +575,7 @@ def main():
             evaluations = db.get_evaluations_by_job(selected_job.job_id)
             
             if evaluations:
-                st.success(f"📈 Found {len(evaluations)} applications for this job")
+                st.success(f"Found {len(evaluations)} applications for this job")
                 
                 # Convert to DataFrame for easier handling
                 df = pd.DataFrame(evaluations)
@@ -595,7 +595,7 @@ def main():
                     st.metric("Top Score", f"{top_score}%")
                 
                 # Applications Table
-                st.markdown("### 📋 Applications Overview")
+                st.markdown("### Applications Overview")
                 display_df = df[['student_name', 'email', 'relevance_score', 'hard_match_score', 
                                'semantic_score', 'verdict', 'evaluated_at']].copy()
                 display_df.columns = ['Candidate Name', 'Email', 'Relevance Score (%)', 
@@ -617,7 +617,7 @@ def main():
                     # Score Distribution Bar Chart
                     fig1 = px.bar(df, x="student_name", y="relevance_score", color="verdict",
                                   color_discrete_map={"High":"#28a745","Medium":"#ffc107","Low":"#dc3545"},
-                                  title="📊 Relevance Score by Candidate",
+                                  title="Relevance Score by Candidate",
                                   labels={"student_name": "Candidate", "relevance_score": "Relevance Score (%)"})
                     fig1.update_layout(xaxis_tickangle=-45)
                     st.plotly_chart(fig1, use_container_width=True)
@@ -626,7 +626,7 @@ def main():
                     # Verdict Distribution Pie Chart
                     verdict_counts = df['verdict'].value_counts()
                     fig_pie = px.pie(values=verdict_counts.values, names=verdict_counts.index,
-                                     title="🥧 Verdict Distribution",
+                                     title="Verdict Distribution",
                                      color_discrete_map={"High":"#28a745","Medium":"#ffc107","Low":"#dc3545"})
                     st.plotly_chart(fig_pie, use_container_width=True)
 
@@ -640,13 +640,13 @@ def main():
                 fig2 = px.scatter(df_numeric, x="hard_match_score", y="semantic_score",
                                   size="size_score", color="verdict", hover_name="student_name",
                                   color_discrete_map={"High":"#28a745","Medium":"#ffc107","Low":"#dc3545"},
-                                  title="🎯 Hard Match vs Semantic Score Analysis",
+                                  title="Hard Match vs Semantic Score Analysis",
                                   labels={"hard_match_score": "Hard Match Score (%)", 
                                          "semantic_score": "Semantic Score (%)"})
                 st.plotly_chart(fig2, use_container_width=True)
 
                 # Missing Skills Analysis
-                st.markdown("### 🔍 Missing Skills Analysis")
+                st.markdown("### Missing Skills Analysis")
                 all_missing_skills = []
                 for eval_item in evaluations:
                     if eval_item['missing_skills']:
@@ -659,15 +659,15 @@ def main():
                     skills_df = skills_df.sort_values('Count', ascending=False).head(10)
                     
                     fig3 = px.bar(skills_df, x='Count', y='Skill', orientation='h',
-                                  title="🚫 Most Commonly Missing Skills",
+                                  title="Most Commonly Missing Skills",
                                   labels={'Count': 'Number of Candidates Missing This Skill'})
                     fig3.update_layout(yaxis={'categoryorder':'total ascending'})
                     st.plotly_chart(fig3, use_container_width=True)
                 else:
-                    st.success("🎉 Great! All candidates have the required skills!")
+                    st.success(" Great! All candidates have the required skills!")
 
                 # Detailed candidate information
-                st.markdown("### 👥 Detailed Candidate Information")
+                st.markdown("### Detailed Candidate Information")
                 selected_candidate = st.selectbox("Select candidate for detailed view:", 
                                                 ["-- Select Candidate --"] + df['student_name'].tolist())
                 
@@ -691,21 +691,21 @@ def main():
                         for skill in candidate_data['missing_skills']:
                             st.write(f"  - {skill}")
                     else:
-                        st.success("✅ No missing skills!")
+                        st.success("No missing skills!")
                     
                     if candidate_data['suggestions']:
                         st.write("**Suggestions:**")
                         for suggestion in candidate_data['suggestions']:
                             st.write(f"  - {suggestion}")
             else:
-                st.info("📭 No applications received for this job yet.")
+                st.info(" No applications received for this job yet.")
     
-    elif tab=="👤 User":
+    elif tab==" User":
         st.header("🔹 User Panel - Apply for Jobs")
         
         jobs = db.get_all_jobs()
         if not jobs:
-            st.warning("⚠️ No jobs available at the moment. Please check back later.")
+            st.warning(" No jobs available at the moment. Please check back later.")
             return
         
         job_options = ["-- Select a Job to Apply --"]
@@ -716,13 +716,13 @@ def main():
             job_options.append(option_text)
             job_map[option_text] = job
         
-        selected_option = st.selectbox("🎯 Select Job Position:", job_options)
+        selected_option = st.selectbox("Select Job Position:", job_options)
         
         if selected_option != "-- Select a Job to Apply --":
             selected_job = job_map[selected_option]
             
             # Display job details
-            with st.expander(f"📋 Job Details: {selected_job.title}", expanded=True):
+            with st.expander(f" Job Details: {selected_job.title}", expanded=True):
                 st.write(f"**Company:** {selected_job.company}")
                 st.write(f"**Must-have Skills:** {', '.join(selected_job.must_have_skills)}")
                 if selected_job.good_to_have_skills:
@@ -731,42 +731,42 @@ def main():
                     st.write(f"**Education Requirements:** {', '.join(selected_job.education)}")
                 st.write(f"**Job Description:** {selected_job.description}")
             
-            uploaded = st.file_uploader("📄 Upload Your Resume (PDF/DOCX)", 
+            uploaded = st.file_uploader(" Upload Your Resume (PDF/DOCX)", 
                                       type=["pdf","docx"],
                                       help="Upload your resume in PDF or DOCX format for evaluation")
             
             if uploaded:
                 try:
-                    with st.spinner("🔄 Processing your resume..."):
+                    with st.spinner("Processing your resume..."):
                         bytes_content = uploaded.read()
                         file_type = uploaded.name.split(".")[-1]
                         resume = parser.parse_resume(bytes_content, file_type, uploaded.name)
                         
                         if resume is None:
-                            st.error("❌ Failed to process resume. Please try a different file.")
+                            st.error(" Failed to process resume. Please try a different file.")
                             return
                             
                         db.save_resume(resume)
                         evaluation = evaluator.evaluate(resume, selected_job)
                         db.save_evaluation(evaluation)
                     
-                    st.success("✅ Resume processed successfully!")
+                    st.success("Resume processed successfully!")
                     
                     # Results Section
                     st.markdown("---")
-                    st.subheader(f"📊 Evaluation Results for {resume.student_name}")
+                    st.subheader(f" Evaluation Results for {resume.student_name}")
                     
                     # Score metrics
                     col1, col2, col3, col4 = st.columns(4)
                     with col1:
-                        st.metric("🎯 Relevance Score", f"{evaluation.relevance_score}%")
+                        st.metric(" Relevance Score", f"{evaluation.relevance_score}%")
                     with col2:
-                        st.metric("🔧 Hard Match Score", f"{evaluation.hard_match_score}%")
+                        st.metric(" Hard Match Score", f"{evaluation.hard_match_score}%")
                     with col3:
-                        st.metric("🧠 Semantic Score", f"{evaluation.semantic_score}%")
+                        st.metric("Semantic Score", f"{evaluation.semantic_score}%")
                     with col4:
                         verdict_color = {"High": "🟢", "Medium": "🟡", "Low": "🔴"}
-                        st.metric("📋 Verdict", f"{verdict_color.get(evaluation.verdict, '')} {evaluation.verdict}")
+                        st.metric(" Verdict", f"{verdict_color.get(evaluation.verdict, '')} {evaluation.verdict}")
                     
                     # Visual Score Breakdown
                     col1, col2 = st.columns([2, 1])
@@ -781,7 +781,7 @@ def main():
                         
                         fig = px.bar(score_df, x="Score Type", y="Score", color="Color",
                                      color_discrete_map={color: color for color in score_df["Color"]},
-                                     title="📊 Your Score Breakdown",
+                                     title=" Your Score Breakdown",
                                      labels={"Score": "Score (%)"})
                         fig.update_layout(showlegend=False, yaxis=dict(range=[0, 100]))
                         st.plotly_chart(fig, use_container_width=True)
@@ -812,36 +812,36 @@ def main():
                         st.plotly_chart(fig_gauge, use_container_width=True)
                     
                     # Detailed Feedback Section
-                    st.markdown("### 📝 Detailed Feedback")
+                    st.markdown("###  Detailed Feedback")
                     
                     # Missing Skills
                     col1, col2 = st.columns(2)
                     with col1:
-                        st.markdown("#### 🚫 Missing Skills")
+                        st.markdown("####  Missing Skills")
                         if evaluation.missing_skills:
                             for skill in evaluation.missing_skills:
-                                st.markdown(f"❌ **{skill}**")
+                                st.markdown(f" **{skill}**")
                         else:
-                            st.success("✅ All required skills found!")
+                            st.success("All required skills found!")
                     
                     with col2:
-                        st.markdown("#### 🎓 Missing Qualifications")
+                        st.markdown("####  Missing Qualifications")
                         if evaluation.missing_qualifications:
                             for qual in evaluation.missing_qualifications:
-                                st.markdown(f"❌ **{qual}**")
+                                st.markdown(f" **{qual}**")
                         else:
-                            st.success("✅ Education requirements met!")
+                            st.success("Education requirements met!")
                     
                     # Suggestions
-                    st.markdown("#### 💡 Recommendations for Improvement")
+                    st.markdown("####  Recommendations for Improvement")
                     if evaluation.suggestions:
                         for i, suggestion in enumerate(evaluation.suggestions, 1):
                             st.markdown(f"**{i}.** {suggestion}")
                     else:
-                        st.success("🎉 Your resume looks great for this position!")
+                        st.success(" Your resume looks great for this position!")
                     
                     # Extracted Information
-                    with st.expander("📋 Extracted Information from Your Resume", expanded=False):
+                    with st.expander(" Extracted Information from Your Resume", expanded=False):
                         col1, col2 = st.columns(2)
                         with col1:
                             st.write("**Detected Skills:**")
@@ -864,20 +864,20 @@ def main():
                                 st.write("  No education information detected")
                     
                     # Next Steps
-                    st.markdown("### 🚀 Next Steps")
+                    st.markdown("###  Next Steps")
                     if evaluation.verdict == "High":
-                        st.success("🎉 Congratulations! Your resume shows strong relevance for this position. You're likely to be a good fit!")
+                        st.success(" Congratulations! Your resume shows strong relevance for this position. You're likely to be a good fit!")
                     elif evaluation.verdict == "Medium":
-                        st.warning("👍 Your resume shows moderate relevance. Consider addressing the missing skills and suggestions above to strengthen your application.")
+                        st.warning("Your resume shows moderate relevance. Consider addressing the missing skills and suggestions above to strengthen your application.")
                     else:
-                        st.error("📈 Your resume needs improvement for this position. Focus on developing the missing skills and qualifications mentioned above.")
+                        st.error("Your resume needs improvement for this position. Focus on developing the missing skills and qualifications mentioned above.")
                     
                     # Download option (if needed)
                     st.markdown("---")
-                    st.info("💾 Your evaluation has been saved. You can apply to more positions or return later to check your results.")
+                    st.info(" Your evaluation has been saved. You can apply to more positions or return later to check your results.")
                 
                 except Exception as e:
-                    st.error(f"❌ Error processing resume: {str(e)}")
+                    st.error(f"Error processing resume: {str(e)}")
                     st.info("Please try uploading a different file or contact support if the issue persists.")
 
 if __name__=="__main__":
