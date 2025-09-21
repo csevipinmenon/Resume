@@ -24,7 +24,7 @@
 
 ---
 
-## 🔧 Tech Stack
+##  Tech Stack
 
 - **Python 3.10+**
 - **Streamlit** for UI
