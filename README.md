@@ -34,23 +34,6 @@
 - **SentenceTransformers** for semantic evaluation
 - **Pandas / JSON** for data processing
 
----
-
-## Project Structure
-
-```
-
-project/
-│── app.py                     # Streamlit main app
-│── database.py                # SQLite DB manager
-│── parser.py                  # Resume document parser
-│── evaluator.py               # Resume evaluation logic
-│── requirements.txt           # Dependencies
-│── README.md                  # Project documentation
-
-```
-
----
 
 ##  Workflows
 
