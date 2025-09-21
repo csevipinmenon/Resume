@@ -16,7 +16,7 @@ try:
     import torch
     SENTENCE_TRANSFORMERS_AVAILABLE = True
 except ImportError as e:
-    print(f"⚠️ SentenceTransformer libraries not available: {e}")
+    print(f"SentenceTransformer libraries not available: {e}")
     SENTENCE_TRANSFORMERS_AVAILABLE = False
 
 # Document parsing
@@ -25,8 +25,8 @@ try:
     import docx2txt
     DOC_LIBS_AVAILABLE = True
 except ImportError as e:
-    print(f"⚠️ Document parsing libraries not available: {e}")
-    print("📝 Text extraction from PDF/DOCX files will be limited")
+    print(f"Document parsing libraries not available: {e}")
+    print("Text extraction from PDF/DOCX files will be limited")
     DOC_LIBS_AVAILABLE = False
 
 # ------------------- DATA MODELS -------------------
@@ -260,7 +260,7 @@ class DocumentParser:
                     text += page_text + "\n"
             return text
         except Exception as e:
-            print(f"⚠️ PDF extraction failed: {e}")
+            print(f"PDF extraction failed: {e}")
             return ""
     
     def extract_text_from_docx(self, content: bytes) -> str:
@@ -270,7 +270,7 @@ class DocumentParser:
             import io
             return docx2txt.process(io.BytesIO(content))
         except Exception as e:
-            print(f"⚠️ DOCX extraction failed: {e}")
+            print(f"DOCX extraction failed: {e}")
             return ""
     
     def clean_text(self, text: str) -> str:
@@ -304,7 +304,7 @@ class DocumentParser:
         raw_text = ""
         
         if not content:
-            st.warning("⚠️ Empty file uploaded")
+            st.warning("Empty file uploaded")
             return None
             
         try:
@@ -313,11 +313,11 @@ class DocumentParser:
             elif file_type.lower() in ["docx","doc"]: 
                 raw_text = self.extract_text_from_docx(content)
             else:
-                st.error(f"❌ Unsupported file type: {file_type}")
+                st.error(f"Unsupported file type: {file_type}")
                 return None
                 
             if not raw_text.strip():
-                st.warning("⚠️ No text could be extracted from the file. Please ensure the file contains readable text.")
+                st.warning("No text could be extracted from the file. Please ensure the file contains readable text.")
                 # Create a basic resume with just filename
                 raw_text = f"Resume file: {filename}"
                 
@@ -336,7 +336,7 @@ class DocumentParser:
                 uploaded_at=datetime.now()
             )
         except Exception as e:
-            st.error(f"❌ Error parsing resume: {str(e)}")
+            st.error(f"Error parsing resume: {str(e)}")
             return None
 
 # ------------------- RESUME EVALUATOR -------------------
@@ -349,10 +349,10 @@ class ResumeEvaluator:
                 # Force CPU usage to avoid CUDA issues in cloud environments
                 device = 'cpu'
                 self.model = SentenceTransformer('all-MiniLM-L6-v2', device=device)
-                print(f"✅ SentenceTransformer loaded successfully on {device}")
+                print(f"SentenceTransformer loaded successfully on {device}")
             except Exception as e:
-                print(f"⚠️ Failed to load SentenceTransformer: {e}")
-                print("🔄 Falling back to keyword-based similarity")
+                print(f"Failed to load SentenceTransformer: {e}")
+                print("Falling back to keyword-based similarity")
                 self.model = None
     
     def calc_hard_score(self, resume: ResumeData, job: JobRequirement) -> Tuple[float,List[str]]:
@@ -391,7 +391,7 @@ class ResumeEvaluator:
                 similarity = cosine_similarity(r_emb, j_emb)[0][0]
                 return round(float(similarity * 100), 2)
             except Exception as e:
-                print(f"⚠️ Semantic scoring failed: {e}")
+                print(f"Semantic scoring failed: {e}")
                 return self._fallback_semantic_score(resume, job)
         else:
             return self._fallback_semantic_score(resume, job)
